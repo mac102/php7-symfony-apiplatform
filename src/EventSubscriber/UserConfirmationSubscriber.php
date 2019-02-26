@@ -10,6 +10,8 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\GetResponseForControllerResultEvent;
 use Symfony\Component\HttpKernel\KernelEvents;
+use App\Repository\UserRepository;
+use Doctrine\ORM\EntityManagerInterface;
 
 class UserConfirmationSubscriber implements EventSubscriberInterface
 {
