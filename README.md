@@ -1,0 +1,1 @@
+###### Symfony 4 + Api Platform Demo App ######
