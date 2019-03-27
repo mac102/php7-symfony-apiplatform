@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 use Doctrine\ORM\Mapping as ORM;
@@ -9,10 +10,52 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Component\Security\Core\User\UserInterface;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\DateFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\RangeFilter;
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\OrderFilter;
+use ApiPlatform\Core\Serializer\Filter\PropertyFilter;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\BlogPostRepository")
+ * @ApiFilter(
+ *      SearchFilter::class,
+ *      properties={
+ *          "title": "partial",
+ *          "content": "partial",
+ *          "author": "exact",
+ *          "author.name": "partial"
+ *      }
+ * )
+ * @ApiFilter(
+ *      DateFilter::class,
+ *      properties={
+ *          "published"
+ *      }
+ * )
+ * @ApiFilter(
+ *      RangeFilter::class,
+ *      properties={"id"}
+ * )
+ * @ApiFilter(
+ *      OrderFilter::class,
+ *      properties={
+ *          "id",
+ *          "published",
+ *          "title"
+ *      },
+ *      arguments={"orderParameterName"="_order"}
+ * )
+ * @ApiFilter(
+ *      PropertyFilter::class, 
+ *      arguments={
+ *          "parameterName": "properties",
+ *          "overrideDefaultProperties": false,
+ *          "whitelist": {"id", "author", "slug", "title", "content"}
+ *      }
+ * )
  * @ApiResource(
+ *      attributes={"order"={"published": "DESC"}},
  *      itemOperations={
  *          "get"={
  *              "normalization_context"={
@@ -86,9 +129,18 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
      */
     private $comments;
 
+    /**
+     * @ORM\ManyToMany(targetEntity="App\Entity\Image")
+     * @ORM\JoinTable()
+     * @ApiSubresource()
+     * @Groups({"post","get-blog-post-with-author"})
+     */
+    private $images;
+
     public function __construct()
     {
         $this->comments = new ArrayCollection();
+        $this->images = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -162,11 +214,23 @@ class BlogPost implements AuthoredEntityInterface, PublishedDateEntityInterface
         return $this;
     }
 
-    /**
-     * Get the value of comments
-     */ 
     public function getComments()
     {
         return $this->comments;
+    }
+
+    public function getImages()
+    {
+        return $this->images;
+    }
+
+    public function addImage(Image $image)
+    {
+        $this->images->add($image);
+    }
+
+    public function removeImage(Image $image)
+    {
+        $this->images->removeElement($image);
     }
 }
