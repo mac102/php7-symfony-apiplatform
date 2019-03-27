@@ -13,3 +13,6 @@ api_platform:
             #client_partial: true
             #partial_parameter_name: 'partial'
     #     order_parameter_name: '_order' //zmiana nazyw parametru
+    exception_to_status:
+        App\Exception\EmptyBodyException: 400
+        App\Exception\InvalidConfirmationTokenException: 404

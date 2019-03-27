@@ -46,9 +46,10 @@ use Symfony\Component\Security\Core\Validator\Constraints\UserPassword;
  *              "denormalization_context"={
  *                 "groups"={"post"}
  *             },
- *          "normalization_context"={
- *                 "groups"={"get"}
- *             }
+    *          "normalization_context"={
+    *                 "groups"={"get"}
+    *             },
+    *          "validation_groups"={"post"}
  *          }
  *      },
  * )
