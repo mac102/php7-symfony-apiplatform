@@ -108,7 +108,7 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
     /**
      * Get the value of author
      */ 
-    public function getAuthor(): User
+    public function getAuthor(): ?User
     {
         return $this->author;
     }
@@ -128,7 +128,7 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
     /**
      * Get the value of blogPost
      */ 
-    public function getBlogPost(): BlogPost
+    public function getBlogPost(): ?BlogPost
     {
         return $this->blogPost;
     }
@@ -143,5 +143,10 @@ class Comment implements AuthoredEntityInterface, PublishedDateEntityInterface
         $this->blogPost = $blogPost;
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return substr($this->content,0,20).'...';
     }
 }
