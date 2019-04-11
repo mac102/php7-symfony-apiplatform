@@ -12,7 +12,10 @@ use Symfony\Component\Serializer\Annotation\Groups;
  * @ORM\Entity()
  * @Vich\Uploadable()
  * @ApiResource(
- *      attributes={"order"={"id": "ASC"}},
+ *      attributes={
+ *          "order"={"id": "ASC"},
+ *          "formats"={"json", "jsonld", "form"={"multipart/form-data"}}
+ *      },
  *      collectionOperations={
  *          "get",
  *          "post"={
